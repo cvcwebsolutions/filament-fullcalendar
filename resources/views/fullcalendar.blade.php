@@ -4,38 +4,27 @@
 
 <x-filament-widgets::widget>
     <x-filament::section>
-
-        @php
-            // logger($this->draggableEvents());
-        @endphp
-
         <div class="flex justify-end flex-1 mb-4">
             <x-filament-actions::actions :actions="$this->getCachedHeaderActions()" class="shrink-0" />
         </div>
         <div class="flex gap-2">
             <div class="flex flex-col collapsable-sidebar collapsed-sidebar" id="sidebar">
                 <div class="py-8"></div>
-                @if($this->draggableEvents())
-                    <div class="flex flex-col gap-1 px-2 py-4 text-sm text-center text-white bg-white border border-gray-400 shadow-sm grow rounded-t-xl">
-                        @foreach ($this->draggableEvents() as $data)
-{{--                            @php--}}
-{{--                                $eventColor = $event->color ?? '#D97706';--}}
-{{--                                $eventableType = str_replace("\\","\\\\", $event->eventable_type);--}}
-{{--                            @endphp--}}
-                            <div class="cursor-move py-0.5 border rounded-md draggable" data-event='{"id": "{{ $data['id'] }}", "title": "{{ $data['title'] }}" }'>{{ $data['title'] }}</div>
-                        @endforeach
-                    </div>
-
-
-                @endif
-
+                <div class="flex flex-col gap-1 px-2 py-4 text-sm text-center text-white bg-white border border-gray-400 shadow-sm grow rounded-t-xl">
+                    @foreach ($this->draggableEvents() as $draggableEvent)
+                        @php
+                            $draggableEventColor = '#D97706';
+                            $draggableEventableType = str_replace("\\","\\\\", $draggableEvent->instance_type);
+                        @endphp
+                        <div class="cursor-move py-0.5 border rounded-md draggable" data-event='{"title": "{{ $draggableEvent->name }}", "description": "{{ $draggableEvent->description }}", "color": "{{ $draggableEventColor }}", "eventable_type": "{{ $draggableEventableType }}", "eventable_id": "{{ $draggableEvent->id }}", "duration": "{{ $draggableEvent->duration }}" }'>{{ $draggableEvent->name }}</div>
+                    @endforeach
+                </div>
             </div>
-
             <div class="grow">
                 <div class="filament-fullcalendar" wire:ignore ax-load
-                     ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('filament-fullcalendar-alpine', 'saade/filament-fullcalendar') }}"
-                     ax-load-css="{{ \Filament\Support\Facades\FilamentAsset::getStyleHref('filament-fullcalendar-styles', 'saade/filament-fullcalendar') }}"
-                     x-ignore x-data="fullcalendar({
+                    ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('filament-fullcalendar-alpine', 'saade/filament-fullcalendar') }}"
+                    ax-load-css="{{ \Filament\Support\Facades\FilamentAsset::getStyleHref('filament-fullcalendar-styles', 'saade/filament-fullcalendar') }}"
+                    x-ignore x-data="fullcalendar({
                         locale: @js($plugin->getLocale()),
                         plugins: @js($plugin->getPlugins()),
                         schedulerLicenseKey: @js($plugin->getSchedulerLicenseKey()),
@@ -57,7 +46,7 @@
             }
 
             .collapsed-sidebar {
-                /*width: 0;*/
+                width: 0;
                 border: transparent !important;
             }
 

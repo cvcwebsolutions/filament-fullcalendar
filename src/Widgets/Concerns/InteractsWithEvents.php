@@ -30,11 +30,9 @@ trait InteractsWithEvents
      * @param array $oldEvent An Event Object that holds information about the event before the drop.
      * @param array $relatedEvents An array of other related Event Objects that were also dropped. An event might have other recurring event instances or might be linked to other events with the same groupId
      * @param array $delta A Duration Object that represents the amount of time the event was moved by.
-     * @param ?array $oldResource A Resource Object that represents the previously assigned resource.
-     * @param ?array $newResource A Resource Object that represents the newly assigned resource.
-     * @return bool Whether to revert the drop action.
+     * @return bool Wether to revert the drop action.
      */
-    public function onEventDrop(array $event, array $oldEvent, array $relatedEvents, array $delta, ?array $oldResource, ?array $newResource): bool
+    public function onEventDrop(array $event, array $oldEvent, array $relatedEvents, array $delta): bool
     {
         if ($this->getModel()) {
             $this->record = $this->resolveRecord($event['id']);
@@ -46,8 +44,6 @@ trait InteractsWithEvents
             'oldEvent' => $oldEvent,
             'relatedEvents' => $relatedEvents,
             'delta' => $delta,
-            'oldResource' => $oldResource,
-            'newResource' => $newResource,
         ]);
 
         return false;
@@ -60,7 +56,7 @@ trait InteractsWithEvents
      * @param array $relatedEvents An array of other related Event Objects that were also dropped. An event might have other recurring event instances or might be linked to other events with the same groupId
      * @param array $startDelta A Duration Object that represents the amount of time the event’s start date was moved by.
      * @param array $endDelta A Duration Object that represents the amount of time the event’s end date was moved by.
-     * @return mixed Whether to revert the resize action.
+     * @return mixed Wether to revert the resize action.
      */
     public function onEventResize(array $event, array $oldEvent, array $relatedEvents, array $startDelta, array $endDelta): bool
     {
@@ -83,13 +79,12 @@ trait InteractsWithEvents
     /**
      * Triggered when a date/time selection is made (single or multiple days).
      * @param string $start An ISO8601 string representation of the start date. It will have a timezone offset similar to the calendar’s timeZone. If selecting all-day cells, it won’t have a time nor timezone part.
-     * @param ?string $end An ISO8601 string representation of the end date. It will have a timezone offset similar to the calendar’s timeZone. If selecting all-day cells, it won’t have a time nor timezone part.
+     * @param string $end An ISO8601 string representation of the end date. It will have a timezone offset similar to the calendar’s timeZone. If selecting all-day cells, it won’t have a time nor timezone part.
      * @param bool $allDay Whether the selection happened on all-day cells.
-     * @param ?array $view A View array that contains information about a calendar view, such as title and date range.
-     * @param ?array $resource A Resource Object that represents the selected resource.
+     * @param array $view A View array that contains information about a calendar view, such as title and date range.
      * @return void
      */
-    public function onDateSelect(string $start, ?string $end, bool $allDay, ?array $view, ?array $resource): void
+    public function onDateSelect(string $start, ?string $end, bool $allDay, ?array $view): void
     {
         [$start, $end] = $this->calculateTimezoneOffset($start, $end, $allDay);
 
@@ -98,7 +93,41 @@ trait InteractsWithEvents
             'start' => $start,
             'end' => $end,
             'allDay' => $allDay,
-            'resource' => $resource,
+        ]);
+    }
+
+        /**
+
+     */
+    public function onDrop($dropInfo, $event): void
+    {
+        $date = $dropInfo['dateStr'];
+        $jsonEvent = json_decode($event);
+
+        $title = $jsonEvent->title;
+        $description = $jsonEvent->description;
+        $duration = $jsonEvent->duration;
+
+        $startDate = Carbon::parse($date)->format('Y-m-d');
+        $endDate = Carbon::parse($date)->format('Y-m-d');
+        $startTime = Carbon::parse($date)->format('H:i:s');
+
+        $eventableId = $jsonEvent->eventable_id;
+        $eventableType = $jsonEvent->eventable_type;
+
+        $color = $jsonEvent->color;
+        $this->mountAction('create', [
+            'type' => 'externalDraggableDrop',
+            'title' => $title,
+            'color' => $color,
+            'description' => $description,
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'eventable_id' => $eventableId,
+            'eventable_type' => $eventableType,
+            'start_time' => $startTime,
+            'duration' => $duration
+
         ]);
     }
 
