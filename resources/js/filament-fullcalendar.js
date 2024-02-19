@@ -93,11 +93,12 @@ export default function fullcalendar({
                 drop: (dropInfo) => {
                     // console.log(dropInfo.event);
                     //console.log(dropInfo);
-                    event = dropInfo.draggedEl.dataset.event;
+                    // event = dropInfo.draggedEl.dataset.event;
                     // console.log(event);
-                    this.$wire.onDrop(dropInfo, event)
-                    calendar.updateSize();
+                    // this.$wire.onDrop(dropInfo, event)
+                    // calendar.updateSize();
                     //event.id = 'deletable';
+                    console.log(dropInfo);
 
                 },
                 eventReceive: (info) => {

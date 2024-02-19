@@ -11,13 +11,12 @@
             <div class="flex flex-col collapsable-sidebar collapsed-sidebar" id="sidebar">
                 <div class="py-8"></div>
                 <div class="flex flex-col gap-1 px-2 py-4 text-sm text-center text-white bg-white border border-gray-400 shadow-sm grow rounded-t-xl">
-                    @foreach ($this->draggableEvents() as $draggableEvent)
-                        @php
-                            $draggableEventColor = '#D97706';
-                            $draggableEventableType = str_replace("\\","\\\\", $draggableEvent->instance_type);
-                        @endphp
-                        <div class="cursor-move py-0.5 border rounded-md draggable" data-event='{"title": "{{ $draggableEvent->name }}", "description": "{{ $draggableEvent->description }}", "color": "{{ $draggableEventColor }}", "eventable_type": "{{ $draggableEventableType }}", "eventable_id": "{{ $draggableEvent->id }}", "duration": "{{ $draggableEvent->duration }}" }'>{{ $draggableEvent->name }}</div>
-                    @endforeach
+                    @if($this->draggableEvents())
+                        @foreach ($this->draggableEvents() as $draggableEvent)
+
+                            <div class="cursor-move py-0.5 border rounded-md draggable" data-event='{"title": "{{ $draggableEvent['title'] }}", "eventable_type": "{{ $draggableEvent['eventable_type'] }}"}'>{{ $draggableEvent['title'] }}</div>
+                        @endforeach
+                    @endif
                 </div>
             </div>
             <div class="grow">
