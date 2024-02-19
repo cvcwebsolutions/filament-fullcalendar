@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `filament-fullcalendar` will be documented in this file.ff
+All notable changes to `filament-fullcalendar` will be documented in this file.
 
 ## v1.9.2 - 2023-07-11
 

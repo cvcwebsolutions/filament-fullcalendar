@@ -1,5 +1,5 @@
 import { Calendar } from '@fullcalendar/core'
-import interactionPlugin from '@fullcalendar/interaction'
+import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import listPlugin from '@fullcalendar/list'
@@ -10,7 +10,6 @@ import adaptivePlugin from '@fullcalendar/adaptive'
 import resourcePlugin from '@fullcalendar/resource'
 import resourceDayGridPlugin from '@fullcalendar/resource-daygrid'
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline'
-import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid'
 import rrulePlugin from '@fullcalendar/rrule'
 import momentPlugin from '@fullcalendar/moment'
 import momentTimezonePlugin from '@fullcalendar/moment-timezone'
@@ -27,10 +26,19 @@ export default function fullcalendar({
 }) {
     return {
         init() {
+            let event = null;
             /** @type Calendar */
             const calendar = new Calendar(this.$el, {
+                customButtons: {
+                    toggleSidebar: {
+                      text: 'sidebar',
+                      click: function() {
+                        toggleSidebar();
+                      }
+                    }
+                  },
                 headerToolbar: {
-                    'left': 'prev,next today',
+                    'left': 'prev,next today, toggleSidebar',
                     'center': 'title',
                     'right': 'dayGridMonth,dayGridWeek,dayGridDay',
                 },
@@ -40,6 +48,7 @@ export default function fullcalendar({
                 timeZone,
                 editable,
                 selectable,
+                droppable: true,
                 ...config,
                 locales,
                 events: (info, successCallback, failureCallback) => {
@@ -57,8 +66,8 @@ export default function fullcalendar({
 
                     this.$wire.onEventClick(event)
                 },
-                eventDrop: async ({ event, oldEvent, relatedEvents, delta, oldResource, newResource, revert }) => {
-                    const shouldRevert = await this.$wire.onEventDrop(event, oldEvent, relatedEvents, delta, oldResource, newResource)
+                eventDrop: async ({ event, oldEvent, relatedEvents, delta, revert }) => {
+                    const shouldRevert = await this.$wire.onEventDrop(event, oldEvent, relatedEvents, delta)
 
                     if (typeof shouldRevert === 'boolean' && shouldRevert) {
                         revert()
@@ -71,22 +80,70 @@ export default function fullcalendar({
                         revert()
                     }
                 },
-                dateClick: ({ dateStr, allDay, view, resource }) => {
+                dateClick: ({ dateStr, allDay, view }) => {
                     if (!selectable) return;
-                    this.$wire.onDateSelect(dateStr, null, allDay, view, resource)
+                    this.$wire.onDateSelect(dateStr, null, allDay, view)
                 },
-                select: ({ startStr, endStr, allDay, view, resource }) => {
+                select: ({ startStr, endStr, allDay, view }) => {
+                    console.log(startStr);
                     if (!selectable) return;
-                    this.$wire.onDateSelect(startStr, endStr, allDay, view, resource)
+                    this.$wire.onDateSelect(startStr, endStr, allDay, view)
                 },
+
+                drop: (dropInfo) => {
+                    // console.log(dropInfo.event);
+                    //console.log(dropInfo);
+                    event = dropInfo.draggedEl.dataset.event;
+                    // console.log(event);
+                    this.$wire.onDrop(dropInfo, event)
+                    calendar.updateSize();
+                    //event.id = 'deletable';
+
+                },
+                eventReceive: (info) => {
+                    event = info.event;
+                }
             })
 
-            calendar.render()
+            calendar.render();
+             // External dragging setup
+            const draggableElements = document.querySelectorAll('.draggable');
 
-            window.addEventListener('filament-fullcalendar--refresh', () => calendar.refetchEvents())
+            // Loop through each draggable element and apply Draggable functionality
+            draggableElements.forEach((draggableEl) => {
+                new Draggable(draggableEl, {
+                    eventData: function(eventEl) {
+                        return {
+                            title: eventEl.innerText.trim(),
+                        };
+                    },
+                    // Optionally customize other draggable options here
+                });
+            });
+
+            const sidebar = document.getElementById('sidebar');
+
+            function toggleSidebar() {
+                sidebar.classList.toggle('collapsed-sidebar');
+                setTimeout(() => {
+                    calendar.updateSize();
+                }, 300);
+            }
+
+            window.addEventListener('filament-fullcalendar--refresh', () => {
+                calendar.refetchEvents();
+                calendar.updateSize();
+                if(event != null)
+                {
+                    event.remove();
+                }
+                event = null;
+              });
         },
     }
 }
+
+
 
 const availablePlugins = {
     'interaction': interactionPlugin,
@@ -100,7 +157,6 @@ const availablePlugins = {
     'resource': resourcePlugin,
     'resourceDayGrid': resourceDayGridPlugin,
     'resourceTimeline': resourceTimelinePlugin,
-    'resourceTimeGrid': resourceTimeGridPlugin,
     'rrule': rrulePlugin,
     'moment': momentPlugin,
     'momentTimezone': momentTimezonePlugin,

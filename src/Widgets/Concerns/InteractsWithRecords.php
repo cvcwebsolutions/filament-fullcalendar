@@ -72,7 +72,7 @@ trait InteractsWithRecords
 
     protected function getEloquentQuery(): Builder
     {
-        $query = app($this->getModel())::query();
+        $query = $this->model::query();
 
         // TODO: Scope query to tenant.
 
@@ -87,5 +87,10 @@ trait InteractsWithRecords
     protected function getModelLabel(): string
     {
         return $this->modelLabel ?? get_model_label($this->getModel());
+    }
+
+    protected function saveDraggingEvent($record) : void
+    {
+        //
     }
 }
