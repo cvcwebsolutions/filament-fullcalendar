@@ -49,6 +49,7 @@ export default function fullcalendar({
                 editable,
                 selectable,
                 droppable: true,
+                // initialView: 'resourceTimeline',
                 ...config,
                 locales,
                 events: (info, successCallback, failureCallback) => {
