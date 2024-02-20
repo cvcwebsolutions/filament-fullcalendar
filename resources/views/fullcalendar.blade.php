@@ -7,13 +7,13 @@
         <div class="flex justify-end flex-1 mb-4">
             <x-filament-actions::actions :actions="$this->getCachedHeaderActions()" class="shrink-0" />
         </div>
+        @livewire('calendar.filter-component', ['ownerRecord' => $ownerRecord])
         <div class="flex gap-2">
             <div class="flex flex-col collapsable-sidebar collapsed-sidebar" id="sidebar">
                 <div class="py-8"></div>
                 <div class="flex flex-col gap-1 px-2 py-4 text-sm text-center text-white bg-white border border-gray-400 shadow-sm grow rounded-t-xl">
                     @if($this->draggableEvents())
                         @foreach ($this->draggableEvents() as $draggableEvent)
-
                             <div class="cursor-move py-0.5 border rounded-md draggable" data-event='{"title": "{{ $draggableEvent['title'] }}", "eventable_type": "{{ $draggableEvent['eventable_type'] }}"}'>{{ $draggableEvent['title'] }}</div>
                         @endforeach
                     @endif
@@ -51,10 +51,37 @@
 
             .draggable{
                 background-color: #D97706;
-
             }
         </style>
     </x-filament::section>
+    @push('scripts')
+        <script>
+            // window.addEventListener('toggleSidebar', function() {
+            //     const sidebar = document.getElementById('sidebar');
+            //     // function toggleSidebar() {
+            //     sidebar.classList.toggle('collapsed-sidebar');
+            //     console.log('toggled');
+            //     // setTimeout(() => {
+            //     //     calendar.updateSize();
+            //     // }, 300);
+            //     // }
+            // });
+            document.addEventListener('DOMContentLoaded', function () {
+                Livewire.on('toggleSidebar', () => {
+                    const sidebar = document.getElementById('sidebar');
+                        sidebar.classList.toggle('collapsed-sidebar');
+                    console.log('toggled');
+                });
+            });
+
+            // Livewire.on('toggleSidebar', () => {
+            //     const sidebar = document.getElementById('sidebar');
+            //     sidebar.classList.toggle('collapsed-sidebar');
+            //     console.log('toggled');
+            // });
+        </script>
+    @endpush
+
 
     <x-filament-actions::modals />
 </x-filament-widgets::widget>
