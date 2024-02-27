@@ -7,14 +7,27 @@
         <div class="flex justify-end flex-1 mb-4">
             <x-filament-actions::actions :actions="$this->getCachedHeaderActions()" class="shrink-0" />
         </div>
-        @livewire('calendar.filter-component', ['ownerRecord' => $ownerRecord])
+{{--        @livewire('calendar.filter-component', ['ownerRecord' => $ownerRecord])--}}
         <div class="flex gap-2">
             <div class="flex flex-col collapsable-sidebar collapsed-sidebar" id="sidebar">
                 <div class="py-8"></div>
+
                 <div class="flex flex-col gap-1 px-2 py-4 text-sm text-center text-white bg-white border border-gray-400 shadow-sm grow rounded-t-xl">
+
                     @if($this->draggableEvents())
-                        @foreach ($this->draggableEvents() as $draggableEvent)
-                            <div class="cursor-move py-0.5 border rounded-md draggable" data-event='{"title": "{{ $draggableEvent['title'] }}", "eventable_type": "{{ $draggableEvent['eventable_type'] }}"}'>{{ $draggableEvent['title'] }}</div>
+                        @foreach ($this->draggableEvents() as $type => $draggableType)
+                            <div class="fi-breadcrumbs-item-label text-sm font-medium text-gray-500 transition duration-75 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">{{ ucfirst($type) }}</div>
+                            @foreach($draggableType as $draggableEvent)
+                                <div class="cursor-move py-0.5 border rounded-md draggable" data-event='{"title": "{{ $draggableEvent['title'] }}", "eventable_type": "{{ $draggableEvent['eventable_type'] }}"}'>
+                                    <div>{{ $draggableEvent['title'] }}</div>
+                                    @if($draggableEvent['start'])
+                                        <div class="text-left text-xs ml-2">Start : {{ $draggableEvent['start'] }}</div>
+                                        <div class="text-left text-xs ml-2">End : {{ $draggableEvent['end'] }}</div>
+                                        <div class="text-right text-xs mr-2"><a href="#">Edit-> </a></div>
+                                    @endif
+                                </div>
+                            @endforeach
+
                         @endforeach
                     @endif
                 </div>
@@ -45,7 +58,7 @@
             }
 
             .collapsed-sidebar {
-                width: 0;
+                /*width: 0;*/
                 border: transparent !important;
             }
 
