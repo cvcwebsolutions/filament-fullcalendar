@@ -14,6 +14,9 @@ trait InteractsWithEvents
      */
     public function onEventClick(array $event): void
     {
+        if(!isset($event['id'])){
+            return;
+        }
         if ($this->getModel()) {
             $this->record = $this->resolveRecord($event['id']);
         }
