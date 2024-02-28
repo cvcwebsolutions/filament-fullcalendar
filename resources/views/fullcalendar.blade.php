@@ -18,7 +18,10 @@
                         @foreach ($this->draggableEvents() as $type => $draggableType)
                             <div class="fi-breadcrumbs-item-label text-sm font-medium text-gray-500 transition duration-75 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">{{ ucfirst($type) }}</div>
                             @foreach($draggableType as $draggableEvent)
-                                <div class="cursor-move py-0.5 border rounded-md draggable" data-event='{"title": "{{ $draggableEvent['title'] }}", "eventable_type": "{{ $draggableEvent['eventable_type'] }}"}'>
+
+                                <div class="cursor-move py-0.5 border rounded-md draggable" data-event='
+                                {"title": "{{ $draggableEvent['title'] }}", "eventable_id": "{{ $draggableEvent['id'] }}", "eventable_type": "{{ $draggableEvent['eventable_type'] }}", "duration": "{{ $draggableEvent['duration'] }}"}
+                                '>
                                     <div>{{ $draggableEvent['title'] }}</div>
                                     @if($draggableEvent['start'])
                                         <div class="text-left text-xs ml-2">Start : {{ $draggableEvent['start'] }}</div>

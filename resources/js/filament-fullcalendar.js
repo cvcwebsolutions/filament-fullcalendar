@@ -82,26 +82,26 @@ export default function fullcalendar({
                     }
                 },
                 dateClick: ({ dateStr, allDay, view }) => {
+
                     if (!selectable) return;
                     this.$wire.onDateSelect(dateStr, null, allDay, view)
                 },
                 select: ({ startStr, endStr, allDay, view }) => {
-                    console.log(startStr);
+
+                    console.log(startStr, endStr, allDay, view );
                     if (!selectable) return;
                     this.$wire.onDateSelect(startStr, endStr, allDay, view)
                 },
 
-                drop: (dropInfo) => {
-                    // console.log(dropInfo.event);
-                    //console.log(dropInfo);
-                    // event = dropInfo.draggedEl.dataset.event;
-                    // console.log(event);
-                    // this.$wire.onDrop(dropInfo, event)
-                    // calendar.updateSize();
-                    //event.id = 'deletable';
-                    console.log(dropInfo);
+                drop: ({ dateStr, date, allDay, view , draggedEl, jsEvent, resource}) => {
+                    let draggableElm = new Draggable(draggedEl);
+                    let sidebarEvent = draggableElm.dragging.containerEl.dataset.event;
+
+                    if (!selectable) return;
+                    this.$wire.onDrop(date, sidebarEvent, allDay, view)
 
                 },
+
                 eventReceive: (info) => {
                     event = info.event;
                 }
