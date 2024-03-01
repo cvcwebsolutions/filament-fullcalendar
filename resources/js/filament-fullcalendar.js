@@ -98,6 +98,7 @@ export default function fullcalendar({
                     let sidebarEvent = draggableElm.dragging.containerEl.dataset.event;
 
                     if (!selectable) return;
+
                     this.$wire.onDrop(date, sidebarEvent, allDay, view)
 
                 },

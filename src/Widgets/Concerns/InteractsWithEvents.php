@@ -37,6 +37,10 @@ trait InteractsWithEvents
      */
     public function onEventDrop(array $event, array $oldEvent, array $relatedEvents, array $delta): bool
     {
+
+        if(!isset($event['id'])){
+            return false;
+        }
         if ($this->getModel()) {
             $this->record = $this->resolveRecord($event['id']);
         }
@@ -98,6 +102,7 @@ trait InteractsWithEvents
             'allDay' => $allDay,
         ]);
     }
+
 
         /**
 
