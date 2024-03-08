@@ -1,19 +1,19 @@
 @php
-    $plugin = \Saade\FilamentFullCalendar\FilamentFullCalendarPlugin::get();
+    use Filament\Support\Facades\FilamentAsset;use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;$plugin = FilamentFullCalendarPlugin::get();
 @endphp
 
 <x-filament-widgets::widget>
     <x-filament::section>
         <div class="flex justify-end flex-1 mb-4">
-            <x-filament-actions::actions :actions="$this->getCachedHeaderActions()" class="shrink-0" />
+            <x-filament-actions::actions :actions="$this->getCachedHeaderActions()" class="shrink-0"/>
         </div>
-{{--        @livewire('calendar.filter-component', ['ownerRecord' => $ownerRecord])--}}
+        {{--        @livewire('calendar.filter-component', ['ownerRecord' => $ownerRecord])--}}
         <div class="flex gap-2">
             @if($this->draggableEvents())
-            <div class="flex flex-col collapsable-sidebar collapsed-sidebar" id="sidebar">
-                <div class="py-8"></div>
+                <div class="flex flex-col collapsable-sidebar collapsed-sidebar" id="sidebar">
+                    <div class="py-8"></div>
 
-                <div class="flex flex-col gap-1 px-2 py-4 text-sm text-center text-white bg-white border border-gray-400 shadow-sm grow rounded-t-xl">
+                    <div class="flex flex-col gap-1 px-2 py-4 text-sm text-center text-white bg-white border border-gray-400 shadow-sm grow rounded-t-xl">
 
 
                         @foreach ($this->draggableEvents() as $type => $draggableType)
@@ -34,15 +34,15 @@
 
                         @endforeach
 
-                </div>
+                    </div>
 
-            </div>
+                </div>
             @endif
             <div class="grow">
                 <div class="filament-fullcalendar" wire:ignore ax-load
-                    ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('filament-fullcalendar-alpine', 'saade/filament-fullcalendar') }}"
-                    ax-load-css="{{ \Filament\Support\Facades\FilamentAsset::getStyleHref('filament-fullcalendar-styles', 'saade/filament-fullcalendar') }}"
-                    x-ignore x-data="fullcalendar({
+                     ax-load-src="{{ FilamentAsset::getAlpineComponentSrc('filament-fullcalendar-alpine', 'saade/filament-fullcalendar') }}"
+                     ax-load-css="{{ FilamentAsset::getStyleHref('filament-fullcalendar-styles', 'saade/filament-fullcalendar') }}"
+                     x-ignore x-data="fullcalendar({
                         locale: @js($plugin->getLocale()),
                         plugins: @js($plugin->getPlugins()),
                         schedulerLicenseKey: @js($plugin->getSchedulerLicenseKey()),
@@ -68,7 +68,7 @@
                 border: transparent !important;
             }
 
-            .draggable{
+            .draggable {
                 background-color: #D97706;
             }
         </style>
@@ -88,7 +88,7 @@
             document.addEventListener('DOMContentLoaded', function () {
                 Livewire.on('toggleSidebar', () => {
                     const sidebar = document.getElementById('sidebar');
-                        sidebar.classList.toggle('collapsed-sidebar');
+                    sidebar.classList.toggle('collapsed-sidebar');
                     console.log('toggled');
                 });
             });
@@ -102,5 +102,5 @@
     @endpush
 
 
-    <x-filament-actions::modals />
+    <x-filament-actions::modals/>
 </x-filament-widgets::widget>
