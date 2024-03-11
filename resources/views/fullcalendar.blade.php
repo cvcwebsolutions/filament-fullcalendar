@@ -69,7 +69,7 @@
             }
 
             .draggable {
-                background-color: #D97706;
+                background-color: #22C55E;
             }
         </style>
     </x-filament::section>
