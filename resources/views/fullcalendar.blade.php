@@ -20,14 +20,21 @@
                             <div class="fi-breadcrumbs-item-label text-sm font-medium text-gray-500 transition duration-75 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">{{ ucfirst($type) }}</div>
                             @foreach($draggableType as $draggableEvent)
 
-                                <div class="cursor-move py-0.5 border rounded-md draggable" data-event='
+                                @php
+                                    if($draggableEvent['start']){
+                                        $isDragableClass = 'draggable-disable';
+                                    }else{
+                                        $isDragableClass = 'draggable';
+                                    }
+                                @endphp
+                                <div class="cursor-move py-0.5 border rounded-md draggable-bg {{$isDragableClass}}" data-event='
                                 {"title": "{{ $draggableEvent['title'] }}", "eventable_id": "{{ $draggableEvent['id'] }}", "eventable_type": "{{ $draggableEvent['eventable_type'] }}", "duration": "{{ $draggableEvent['duration'] }}"}
                                 '>
                                     <div>{{ $draggableEvent['title'] }}</div>
                                     @if($draggableEvent['start'])
                                         <div class="text-left text-xs ml-2">Start : {{ $draggableEvent['start'] }}</div>
                                         <div class="text-left text-xs ml-2">End : {{ $draggableEvent['end'] }}</div>
-                                        <div class="text-right text-xs mr-2"><a href="#">Edit-> </a></div>
+                                        <div class="text-right text-xs mr-2"><a href="#" wire:click.prevent="onEventSidebarClick({{ $draggableEvent['id'] }})">Edit-> </a></div>
                                     @endif
                                 </div>
                             @endforeach
@@ -68,8 +75,13 @@
                 border: transparent !important;
             }
 
-            .draggable {
+            .draggable-bg {
                 background-color: #22C55E;
+                color: #1c7236;
+            }
+            .draggable-disable{
+                background-color: rgb(34 197 94 / 20%);
+                color: #1c7236;
             }
         </style>
     </x-filament::section>
