@@ -14,6 +14,9 @@ trait InteractsWithEvents
      */
     public function onEventClick(array $event): void
     {
+        if(!isset($event['id'])){
+            return;
+        }
         if ($this->getModel()) {
             $this->record = $this->resolveRecord($event['id']);
         }
@@ -34,6 +37,10 @@ trait InteractsWithEvents
      */
     public function onEventDrop(array $event, array $oldEvent, array $relatedEvents, array $delta): bool
     {
+
+        if(!isset($event['id'])){
+            return false;
+        }
         if ($this->getModel()) {
             $this->record = $this->resolveRecord($event['id']);
         }
@@ -96,37 +103,39 @@ trait InteractsWithEvents
         ]);
     }
 
+
         /**
 
      */
-    public function onDrop($dropInfo, $event): void
+    public function onDrop($date, $sidebarEvent, $allDay, $view): void
     {
-        $date = $dropInfo['dateStr'];
-        $jsonEvent = json_decode($event);
-
+        $date = $date;
+        $jsonEvent = json_decode($sidebarEvent);
         $title = $jsonEvent->title;
-        $description = $jsonEvent->description;
-        $duration = $jsonEvent->duration;
-
+//        $duration = $jsonEvent->duration;
+//
         $startDate = Carbon::parse($date)->format('Y-m-d');
         $endDate = Carbon::parse($date)->format('Y-m-d');
-        $startTime = Carbon::parse($date)->format('H:i:s');
-
+//        $startTime = Carbon::parse($date)->format('H:i:s');
+//
         $eventableId = $jsonEvent->eventable_id;
         $eventableType = $jsonEvent->eventable_type;
 
-        $color = $jsonEvent->color;
         $this->mountAction('create', [
             'type' => 'externalDraggableDrop',
             'title' => $title,
-            'color' => $color,
-            'description' => $description,
-            'start_date' => $startDate,
-            'end_date' => $endDate,
+//            'color' => $color,
+//            'description' => $description,
+//            'start_date' => $startDate,
+//            'end_date' => $endDate,
             'eventable_id' => $eventableId,
             'eventable_type' => $eventableType,
-            'start_time' => $startTime,
-            'duration' => $duration
+//            'start_time' => $startTime,
+//            'duration' => $duration
+
+            'start' => $startDate,
+            'end' => $endDate,
+            'allDay' => $allDay
 
         ]);
     }
