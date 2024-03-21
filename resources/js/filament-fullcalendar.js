@@ -49,6 +49,7 @@ export default function fullcalendar({
                 editable,
                 selectable,
                 droppable: true,
+                // initialView: 'resourceTimeline',
                 ...config,
                 locales,
                 events: (info, successCallback, failureCallback) => {
@@ -85,21 +86,20 @@ export default function fullcalendar({
                     this.$wire.onDateSelect(dateStr, null, allDay, view)
                 },
                 select: ({ startStr, endStr, allDay, view }) => {
-                    console.log(startStr);
+
                     if (!selectable) return;
                     this.$wire.onDateSelect(startStr, endStr, allDay, view)
                 },
 
-                drop: (dropInfo) => {
-                    // console.log(dropInfo.event);
-                    //console.log(dropInfo);
-                    event = dropInfo.draggedEl.dataset.event;
-                    // console.log(event);
-                    this.$wire.onDrop(dropInfo, event)
-                    calendar.updateSize();
-                    //event.id = 'deletable';
+                drop: ({ allDay, date, dateStr, draggedEl, jsEvent, resource, view}) => {
+                    let draggableElm = new Draggable(draggedEl);
+                    let sidebarEvent = draggableElm.dragging.containerEl.dataset.event;
+                    if (!selectable) return;
+
+                    this.$wire.onDrop(date, sidebarEvent, allDay, view)
 
                 },
+
                 eventReceive: (info) => {
                     event = info.event;
                 }
