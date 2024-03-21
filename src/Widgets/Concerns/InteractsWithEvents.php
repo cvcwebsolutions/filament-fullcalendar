@@ -14,7 +14,7 @@ trait InteractsWithEvents
      */
     public function onEventClick(array $event): void
     {
-        if(!isset($event['id'])){
+        if (!isset($event['id'])) {
             return;
         }
         if ($this->getModel()) {
@@ -38,7 +38,7 @@ trait InteractsWithEvents
     public function onEventDrop(array $event, array $oldEvent, array $relatedEvents, array $delta): bool
     {
 
-        if(!isset($event['id'])){
+        if (!isset($event['id'])) {
             return false;
         }
         if ($this->getModel()) {
@@ -104,8 +104,7 @@ trait InteractsWithEvents
     }
 
 
-        /**
-
+    /**
      */
     public function onDrop($date, $sidebarEvent, $allDay, $view): void
     {
@@ -151,7 +150,7 @@ trait InteractsWithEvents
             $end = Carbon::parse($end, $timezone);
         }
 
-        if (! is_null($end) && $allDay) {
+        if (!is_null($end) && $allDay) {
             /**
              * date is exclusive, read more https://fullcalendar.io/docs/select-callback
              * For example, if the selection is all-day and the last day is a Thursday, end will be Friday.
@@ -160,5 +159,18 @@ trait InteractsWithEvents
         }
 
         return [$start, $end, $allDay];
+    }
+
+    public function onEventSidebarEditClick($type, $curriculumId)
+    {
+        $model = curriculumModelClass($type);
+        $curriculum = $model::find($curriculumId);
+        $this->record = $curriculum->event;
+
+        $event = $curriculum->event->toArray();
+        $this->mountAction('view', [
+            'type' => 'click',
+            'event' => $event,
+        ]);
     }
 }

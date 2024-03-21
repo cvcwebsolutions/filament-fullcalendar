@@ -34,7 +34,7 @@
                                     @if($draggableEvent['start'])
                                         <div class="text-left text-xs ml-2">Start : {{ $draggableEvent['start'] }}</div>
                                         <div class="text-left text-xs ml-2">End : {{ $draggableEvent['end'] }}</div>
-                                        <div class="text-right text-xs mr-2"><a href="#" wire:click.prevent="onEventSidebarClick({{ $draggableEvent['id'] }})">Edit-> </a></div>
+                                        <div class="text-right text-xs mr-2"><a href="#" wire:click.prevent="onEventSidebarEditClick('{{ $draggableEvent['eventable_type'] }}', {{ $draggableEvent['id'] }})">Edit-> </a></div>
                                     @endif
                                 </div>
                             @endforeach
@@ -87,16 +87,6 @@
     </x-filament::section>
     @push('scripts')
         <script>
-            // window.addEventListener('toggleSidebar', function() {
-            //     const sidebar = document.getElementById('sidebar');
-            //     // function toggleSidebar() {
-            //     sidebar.classList.toggle('collapsed-sidebar');
-            //     console.log('toggled');
-            //     // setTimeout(() => {
-            //     //     calendar.updateSize();
-            //     // }, 300);
-            //     // }
-            // });
             document.addEventListener('DOMContentLoaded', function () {
                 Livewire.on('toggleSidebar', () => {
                     const sidebar = document.getElementById('sidebar');
@@ -105,11 +95,6 @@
                 });
             });
 
-            // Livewire.on('toggleSidebar', () => {
-            //     const sidebar = document.getElementById('sidebar');
-            //     sidebar.classList.toggle('collapsed-sidebar');
-            //     console.log('toggled');
-            // });
         </script>
     @endpush
 
