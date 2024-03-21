@@ -13,7 +13,7 @@
                 <div class="flex flex-col collapsable-sidebar collapsed-sidebar" id="sidebar">
                     <div class="py-8"></div>
 
-                    <div class="flex flex-col gap-1 px-2 py-4 text-sm text-center text-white bg-white border border-gray-400 shadow-sm grow rounded-t-xl">
+                    <div class="flex flex-col gap-1 px-2 py-4 text-sm text-center text-white border border-gray-400 shadow-sm grow rounded-t-xl">
 
 
                         @foreach ($this->draggableEvents() as $type => $draggableType)
