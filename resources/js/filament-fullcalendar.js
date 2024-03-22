@@ -86,32 +86,27 @@ export default function fullcalendar({
                     this.$wire.onDateSelect(dateStr, null, allDay, view)
                 },
                 select: ({ startStr, endStr, allDay, view }) => {
-
                     if (!selectable) return;
                     this.$wire.onDateSelect(startStr, endStr, allDay, view)
                 },
 
-                drop: ({ allDay, date, dateStr, draggedEl, jsEvent, resource, view}) => {
-                    let draggableElm = new Draggable(draggedEl);
-                    let sidebarEvent = draggableElm.dragging.containerEl.dataset.event;
-                    if (!selectable) return;
-
-                    this.$wire.onDrop(date, sidebarEvent, allDay, view)
+                drop: async ({ allDay, date, dateStr, draggedEl, jsEvent, resource, view}) => {
+                    this.$wire.refreshRecords();
+                    var dataEvent = draggedEl.getAttribute('data-event');
+                    const shouldRevert = this.$wire.onDrop(date, dataEvent, allDay, view)
 
                 },
-
                 eventReceive: (info) => {
                     event = info.event;
                 }
             })
 
             calendar.render();
-             // External dragging setup
             const draggableElements = document.querySelectorAll('.draggable');
 
             // Loop through each draggable element and apply Draggable functionality
             draggableElements.forEach((draggableEl) => {
-                new Draggable(draggableEl, {
+                let draggable = new Draggable(draggableEl, {
                     eventData: function(eventEl) {
                         return {
                             title: eventEl.innerText.trim(),
