@@ -18,7 +18,7 @@
 
                         @php $index = 0 @endphp
                         @foreach ($this->draggableEvents() as $type => $draggableType)
-                            <div class="{{ $index? 'mt-5 border-t border-#31c55d pt-2.5':'' }} fi-breadcrumbs-item-label text-sm font-medium text-gray-500 transition duration-75 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">{{ ucfirst($type) }}</div>
+                            <div class="{{ $index? 'mt-4 border-t border-#31c55d pt-2.5':'' }} fi-breadcrumbs-item-label text-sm font-medium text-gray-500 transition duration-75 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">{{ ucfirst($type) }}</div>
                             @php $index++ @endphp
                             @foreach($draggableType as $draggableEvent)
 
