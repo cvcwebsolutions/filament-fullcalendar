@@ -85,6 +85,9 @@
                 background-color: rgb(194 200 197 / 20%);
                 color: #5e7163;
             }
+            td.fc-day.fc-past {
+                background-color: #EEEEEE;
+            }
         </style>
     </x-filament::section>
     @push('scripts')

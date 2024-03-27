@@ -27,6 +27,13 @@ export default function fullcalendar({
     return {
         init() {
             let event = null;
+            let currentDate = new Date();
+            let year = currentDate.getFullYear();
+            let month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Adds leading zeros if needed
+            let day = String(currentDate.getDate()).padStart(2, '0'); // Adds leading zeros if needed
+            let date_now = `${year}-${month}-${day}`;
+            console.log(`${year}-${month}-${day}`);
+
             /** @type Calendar */
             const calendar = new Calendar(this.$el, {
                 customButtons: {
@@ -98,6 +105,10 @@ export default function fullcalendar({
                 },
                 eventReceive: (info) => {
                     event = info.event;
+                },
+                eventConstraint: {
+                    start: date_now,
+                    end: '2100-01-01' // hard coded goodness unfortunately
                 }
             })
 
