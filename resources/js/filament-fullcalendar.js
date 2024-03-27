@@ -1,5 +1,5 @@
-import { Calendar } from '@fullcalendar/core'
-import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
+import {Calendar} from '@fullcalendar/core'
+import interactionPlugin, {Draggable} from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import listPlugin from '@fullcalendar/list'
@@ -16,14 +16,14 @@ import momentTimezonePlugin from '@fullcalendar/moment-timezone'
 import locales from '@fullcalendar/core/locales-all'
 
 export default function fullcalendar({
-    locale,
-    plugins,
-    schedulerLicenseKey,
-    timeZone,
-    config,
-    editable,
-    selectable,
-}) {
+                                         locale,
+                                         plugins,
+                                         schedulerLicenseKey,
+                                         timeZone,
+                                         config,
+                                         editable,
+                                         selectable,
+                                     }) {
     return {
         init() {
             let event = null;
@@ -38,12 +38,12 @@ export default function fullcalendar({
             const calendar = new Calendar(this.$el, {
                 customButtons: {
                     toggleSidebar: {
-                      text: 'sidebar',
-                      click: function() {
-                        toggleSidebar();
-                      }
+                        text: 'sidebar',
+                        click: function () {
+                            toggleSidebar();
+                        }
                     }
-                  },
+                },
                 headerToolbar: {
                     'left': 'prev,next today, toggleSidebar',
                     'center': 'title',
@@ -60,11 +60,11 @@ export default function fullcalendar({
                 ...config,
                 locales,
                 events: (info, successCallback, failureCallback) => {
-                    this.$wire.fetchEvents({ start: info.startStr, end: info.endStr, timezone: info.timeZone })
+                    this.$wire.fetchEvents({start: info.startStr, end: info.endStr, timezone: info.timeZone})
                         .then(successCallback)
                         .catch(failureCallback)
                 },
-                eventClick: ({ event, jsEvent }) => {
+                eventClick: ({event, jsEvent}) => {
                     jsEvent.preventDefault()
 
                     if (event.url) {
@@ -74,30 +74,42 @@ export default function fullcalendar({
 
                     this.$wire.onEventClick(event)
                 },
-                eventDrop: async ({ event, oldEvent, relatedEvents, delta, revert }) => {
+                eventDrop: async ({event, oldEvent, relatedEvents, delta, revert}) => {
                     const shouldRevert = await this.$wire.onEventDrop(event, oldEvent, relatedEvents, delta)
 
                     if (typeof shouldRevert === 'boolean' && shouldRevert) {
                         revert()
                     }
                 },
-                eventResize: async ({ event, oldEvent, relatedEvents, startDelta, endDelta, revert }) => {
+                eventResize: async ({event, oldEvent, relatedEvents, startDelta, endDelta, revert}) => {
                     const shouldRevert = await this.$wire.onEventResize(event, oldEvent, relatedEvents, startDelta, endDelta)
 
                     if (typeof shouldRevert === 'boolean' && shouldRevert) {
                         revert()
                     }
                 },
-                dateClick: ({ dateStr, allDay, view }) => {
+                dateClick: ({dateStr, allDay, view}) => {
+                    let selected_date = new Date(dateStr);
+                    let now = new Date(date_now);
+
                     if (!selectable) return;
+                    if (selected_date < now) {
+                        this.$wire.notifyPastDate();
+                        return;
+                    }
                     this.$wire.onDateSelect(dateStr, null, allDay, view)
+
                 },
-                select: ({ startStr, endStr, allDay, view }) => {
-                    if (!selectable) return;
+                select: ({startStr, endStr, allDay, view}) => {
+                    let selected_date = new Date(startStr);
+                    let now = new Date(date_now);
+                    if (selected_date < now) {
+                        return;
+                    }
                     this.$wire.onDateSelect(startStr, endStr, allDay, view)
                 },
 
-                drop: async ({ allDay, date, dateStr, draggedEl, jsEvent, resource, view}) => {
+                drop: async ({allDay, date, dateStr, draggedEl, jsEvent, resource, view}) => {
                     this.$wire.refreshRecords();
                     var dataEvent = draggedEl.getAttribute('data-event');
                     const shouldRevert = this.$wire.onDrop(date, dataEvent, allDay, view)
@@ -118,7 +130,7 @@ export default function fullcalendar({
             // Loop through each draggable element and apply Draggable functionality
             draggableElements.forEach((draggableEl) => {
                 let draggable = new Draggable(draggableEl, {
-                    eventData: function(eventEl) {
+                    eventData: function (eventEl) {
                         return {
                             title: eventEl.innerText.trim(),
                         };
@@ -139,16 +151,14 @@ export default function fullcalendar({
             window.addEventListener('filament-fullcalendar--refresh', () => {
                 calendar.refetchEvents();
                 calendar.updateSize();
-                if(event != null)
-                {
+                if (event != null) {
                     event.remove();
                 }
                 event = null;
-              });
+            });
         },
     }
 }
-
 
 
 const availablePlugins = {

@@ -3,6 +3,7 @@
 namespace Saade\FilamentFullCalendar\Widgets\Concerns;
 
 use Carbon\Carbon;
+use Filament\Notifications\Notification;
 use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
 
 trait InteractsWithEvents
@@ -172,5 +173,12 @@ trait InteractsWithEvents
             'type' => 'click',
             'event' => $event,
         ]);
+    }
+    public function notifyPastDate()
+    {
+        Notification::make()
+            ->title(__('You cannot select a past date.'))
+            ->danger()
+            ->send();
     }
 }
