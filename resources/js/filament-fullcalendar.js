@@ -89,6 +89,7 @@ export default function fullcalendar({
                     }
                 },
                 dateClick: ({dateStr, allDay, view}) => {
+                    console.log('drop');
                     let selected_date = new Date(dateStr);
                     let now = new Date(date_now);
 
@@ -101,6 +102,7 @@ export default function fullcalendar({
 
                 },
                 select: ({startStr, endStr, allDay, view}) => {
+                    console.log('select');
                     let selected_date = new Date(startStr);
                     let now = new Date(date_now);
                     if (selected_date < now) {
@@ -110,6 +112,7 @@ export default function fullcalendar({
                 },
 
                 drop: async ({allDay, date, dateStr, draggedEl, jsEvent, resource, view}) => {
+                    console.log('drop');
                     this.$wire.refreshRecords();
                     var dataEvent = draggedEl.getAttribute('data-event');
                     const shouldRevert = this.$wire.onDrop(date, dataEvent, allDay, view)
