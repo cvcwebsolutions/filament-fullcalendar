@@ -36,7 +36,7 @@
                                     @if($draggableEvent['start'])
                                         <div class="text-left text-xs ml-2">Start : {{ \Carbon\Carbon::parse($draggableEvent['start'])->format(user_date_format().' '.user_time_format()) }}</div>
                                         <div class="text-left text-xs ml-2">End : {{ \Carbon\Carbon::parse($draggableEvent['end'])->format(user_date_format().' '.user_time_format()) }}</div>
-                                        <div class="text-right text-xs mr-2"><a href="#" style="color: #2c9e4e" wire:click.prevent="onEventSidebarEditClick('{{ $draggableEvent['eventable_type'] }}', {{ $draggableEvent['id'] }})">Edit-> </a></div>
+                                        <div class="text-right text-xs mr-2"><a href="#" style="color: #45769c" wire:click.prevent="onEventSidebarEditClick('{{ $draggableEvent['eventable_type'] }}', {{ $draggableEvent['id'] }})">Edit-> </a></div>
                                     @endif
                                 </div>
                             @endforeach
@@ -78,8 +78,8 @@
             }
 
             .draggable-bg {
-                background-color: #22C55E;
-                color: #1c7236;
+                background-color: #45769c;
+                color: #ffffff;
             }
             .draggable-disable{
                 background-color: rgb(194 200 197 / 20%);
