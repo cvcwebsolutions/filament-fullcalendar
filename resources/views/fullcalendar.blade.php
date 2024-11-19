@@ -10,38 +10,44 @@
         {{--        @livewire('calendar.filter-component', ['ownerRecord' => $ownerRecord])--}}
         <div class="flex gap-2">
             @if($this->draggableEvents())
+
                 <div class="flex flex-col collapsable-sidebar collapsed-sidebar" id="sidebar">
-                    <div class="py-8"></div>
 
-                    <div class="flex flex-col gap-1 px-2 py-4 text-sm text-center text-white bg-white border border-gray-400 shadow-sm grow rounded-t-xl">
+                    <div class="custom-scrollbar ">
+                        <div class="flex flex-col gap-1 px-2 py-4 text-sm text-center text-white bg-white border border-gray-400 shadow-sm grow rounded-t-xl">
 
+                            @php $index = 0 @endphp
+                            @foreach ($this->draggableEvents() as $type => $draggableType)
+                                <div class="{{ $index? 'mt-4 border-t border-#31c55d pt-2.5':'' }} fi-breadcrumbs-item-label text-sm font-medium text-gray-500 transition duration-75 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">{{ ucfirst($type) }}</div>
+                                @php $index++ @endphp
+                                @foreach($draggableType as $draggableEvent)
 
-                        @php $index = 0 @endphp
-                        @foreach ($this->draggableEvents() as $type => $draggableType)
-                            <div class="{{ $index? 'mt-4 border-t border-#31c55d pt-2.5':'' }} fi-breadcrumbs-item-label text-sm font-medium text-gray-500 transition duration-75 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">{{ ucfirst($type) }}</div>
-                            @php $index++ @endphp
-                            @foreach($draggableType as $draggableEvent)
-
-                                @php
-                                    if($draggableEvent['start']){
-                                        $isDragableClass = 'draggable-disable';
-                                    }else{
-                                        $isDragableClass = 'cursor-move draggable';
-                                    }
-                                @endphp
-                                <div class="py-0.5 border rounded-md draggable-bg {{$isDragableClass}}" data-event='
+                                    @php
+                                        if($draggableEvent['start']){
+                                            $isDragableClass = 'draggable-disable';
+                                        }else{
+                                            $isDragableClass = 'cursor-move draggable';
+                                        }
+                                    @endphp
+                                    <div class="py-0.5 border rounded-md draggable-bg {{$isDragableClass}}" data-event='
                                 {"title": "{{ $draggableEvent['title'] }}", "eventable_id": "{{ $draggableEvent['id'] }}", "eventable_type": "{{ $draggableEvent['eventable_type'] }}", "duration": "{{ $draggableEvent['duration'] }}"}
                                 '>
-                                    <div class="text-left text-xs ml-2">{{ $draggableEvent['title'] }}</div>
-                                    @if($draggableEvent['start'])
-                                        <div class="text-left text-xs ml-2">Start : {{ \Carbon\Carbon::parse($draggableEvent['start'])->format(user_date_format().' '.user_time_format()) }}</div>
-                                        <div class="text-left text-xs ml-2">End : {{ \Carbon\Carbon::parse($draggableEvent['end'])->format(user_date_format().' '.user_time_format()) }}</div>
-                                        <div class="text-right text-xs mr-2"><a href="#" style="color: #45769c" wire:click.prevent="onEventSidebarEditClick('{{ $draggableEvent['eventable_type'] }}', {{ $draggableEvent['id'] }})">Edit-> </a></div>
-                                    @endif
-                                </div>
+                                        <div class="text-left text-xs ml-2">{{ $draggableEvent['title'] }}</div>
+                                        @if($draggableEvent['start'])
+                                            <div class="text-left text-xs ml-2">Start
+                                                : {{ \Carbon\Carbon::parse($draggableEvent['start'])->format(user_date_format().' '.user_time_format()) }}</div>
+                                            <div class="text-left text-xs ml-2">End
+                                                : {{ \Carbon\Carbon::parse($draggableEvent['end'])->format(user_date_format().' '.user_time_format()) }}</div>
+                                            <div class="text-right text-xs mr-2"><a href="#" style="color: #45769c"
+                                                                                    wire:click.prevent="onEventSidebarEditClick('{{ $draggableEvent['eventable_type'] }}', {{ $draggableEvent['id'] }})">Edit-> </a>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endforeach
+
                             @endforeach
 
-                        @endforeach
+                        </div>
 
                     </div>
 
@@ -81,12 +87,37 @@
                 background-color: #45769c;
                 color: #ffffff;
             }
-            .draggable-disable{
+
+            .draggable-disable {
                 background-color: rgb(194 200 197 / 20%);
                 color: #5e7163;
             }
+
             td.fc-day.fc-past {
                 background-color: #EEEEEE;
+            }
+
+            @layer utilities {
+                .custom-scrollbar {
+                    scrollbar-width: thin;
+                    scrollbar-color: #4B5563 #F3F4F6;
+                    overflow: scroll;
+                    max-height: 700px;
+                }
+
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 8px;
+                    height: 8px;
+                }
+
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background-color: #4B5563;
+                    border-radius: 4px;
+                }
+
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background-color: #F3F4F6;
+                }
             }
         </style>
     </x-filament::section>
