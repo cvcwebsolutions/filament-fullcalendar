@@ -65,6 +65,7 @@
                         config: @js($plugin->getConfig()),
                         editable: @json($plugin->isEditable()),
                         selectable: @json($plugin->isSelectable()),
+                        isClickEnabled: @json($this->isClickableDate())
                     })">
                 </div>
             </div>

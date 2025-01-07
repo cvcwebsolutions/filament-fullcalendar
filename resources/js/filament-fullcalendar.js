@@ -8,7 +8,6 @@ import scrollGridPlugin from '@fullcalendar/scrollgrid'
 import timelinePlugin from '@fullcalendar/timeline'
 import adaptivePlugin from '@fullcalendar/adaptive'
 import resourcePlugin from '@fullcalendar/resource'
-import resourceDayGridPlugin from '@fullcalendar/resource-daygrid'
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline'
 import rrulePlugin from '@fullcalendar/rrule'
 import momentPlugin from '@fullcalendar/moment'
@@ -23,6 +22,7 @@ export default function fullcalendar({
                                          config,
                                          editable,
                                          selectable,
+                                         isClickEnabled
                                      }) {
     return {
         init() {
@@ -32,7 +32,7 @@ export default function fullcalendar({
             let month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Adds leading zeros if needed
             let day = String(currentDate.getDate()).padStart(2, '0'); // Adds leading zeros if needed
             let date_now = `${year}-${month}-${day}`;
-            console.log(`${year}-${month}-${day}`);
+            // console.log(`${year}-${month}-${day}`);
 
             /** @type Calendar */
             const calendar = new Calendar(this.$el, {
@@ -89,7 +89,10 @@ export default function fullcalendar({
                     }
                 },
                 dateClick: ({dateStr, allDay, view}) => {
-                    console.log('drop');
+                    console.log(isClickEnabled);
+                    if(isClickEnabled == false){
+                        return;
+                    }
                     let selected_date = new Date(dateStr);
                     let now = new Date(date_now);
 
@@ -102,7 +105,10 @@ export default function fullcalendar({
 
                 },
                 select: ({startStr, endStr, allDay, view}) => {
-                    console.log('select');
+                    console.log(isClickEnabled);
+                    if(isClickEnabled == false){
+                        return;
+                    }
                     let selected_date = new Date(startStr);
                     let now = new Date(date_now);
                     if (selected_date < now) {
@@ -174,7 +180,6 @@ const availablePlugins = {
     'timeline': timelinePlugin,
     'adaptive': adaptivePlugin,
     'resource': resourcePlugin,
-    'resourceDayGrid': resourceDayGridPlugin,
     'resourceTimeline': resourceTimelinePlugin,
     'rrule': rrulePlugin,
     'moment': momentPlugin,

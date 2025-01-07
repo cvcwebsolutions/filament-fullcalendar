@@ -62,4 +62,8 @@ class FullCalendarWidget extends Widget implements HasForms, HasActions
     {
 
     }
+    public function isClickableDate():bool
+    {
+        return true;
+    }
 }
